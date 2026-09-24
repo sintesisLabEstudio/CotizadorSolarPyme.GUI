@@ -132,4 +132,6 @@ namespace CotizadorSolarPyme.GUI
         }
     }
 }
+
+OPERATIVO
         
