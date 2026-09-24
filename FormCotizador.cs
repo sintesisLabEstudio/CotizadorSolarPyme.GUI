@@ -2,6 +2,12 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 
+//IPVG
+//Ramo: Construcción de software
+//profesor: Gastón González
+//Estudiante: jorge vera videla
+
+
 namespace CotizadorSolarPyme.GUI
 {
     public partial class FormCotizador : Form
