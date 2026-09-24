@@ -1,0 +1,41 @@
+Genera un archivo de texto plano llamado 
+    resumenCodigoCoityzaSolForm-fecha-hora.txt 
+        Que Presente didactica mente 
+            todos los archivos (a partir de la raiz de donde esta este mismo archivo )
+                con sus funciones claves interconectadas con parametros funciones archivos eventos y objetos
+                ocupar una momenclatura util que permita seguir el flujo
+                con el codigo completo sin omitir nada ni comentarios
+                solo agregar en el codigo comentarios tuyos de sugerencias importantes en mayusculas
+                comentando las Interacciones entre parametros funciones y archivos 
+                detallando lo Importante y presentando el codigo alternativo
+                presenta una nomenclatura util que permita seguir el flujo de la aplicacion
+            evitar subrallar nada de esta manera 
+                --------------
+                o esta 
+                ______________
+                o esta 
+                *******
+                NO SUBRRALLAR 
+            INDENTAR 
+                CON TITULOS claros cortos precisos maximo 5 palabras
+                    DETALLE: Descripcion muy escueta lo justo y preciso
+                    DESCRIPCION: describe aspectos funcionales y no funcionales
+            al Archivos accesorios  de las otras carpetas solo presentarlos sin su codigo 
+            y señalar que son parte del tejido IMPRESINDIBLES Y RECICLABLES LOS QUE NO
+            los que no son parte del tejido se agrupan al final como ARCHIVOS reciclaje
+            sin presentar codigo o solo el codigo que sea modificable en ellos
+            PANTALLA 
+                donde sea necesario dibujarla con los id de sus complnentes claros
+EJEMPLO:
+    resumenCodigo_16092026.txt 
+        FECHA: (fecha actual)
+        ARCHIVOS:
+            |nombre |.extension | ruta |  y utilidad 
+
+            MainActivity,kt 
+                DETALLE: 
+                DESCRIPCION:
+                RELACIONES:
+                codigo
+            ....
+PRESENTA LA PANTALLA DETALLADA CON LOS NOMBRES DE LOS CONTROLOES ID NAME y su funcion simple
