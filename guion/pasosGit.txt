@@ -1,161 +1,22 @@
-MANUAL DE EJECUCIÓN: SUBIDA DE PROYECTO A GITHUB
-Si el repositorio ya existe en GitHub y quieres descargarlo por primera vez en otra computadora o carpeta nueva:
-No uses git init.
-Lo correcto es clonar directamente el repositorio con:
-Shell Script
-	git clone https://github.com/tu-usuario/codigoCrudUsuariosSimulaSqlite.git
-2. Si ya tienes una carpeta con código en tu PC (como te pasó recién) y quieres conectarla a un repositorio en GitHub que ya tiene archivos 
-Si ya hiciste git init anteriormente, no necesitas volver a hacerlo.
-Lo ideal es conectar el remoto y traer los cambios asegurándote de fusionar los historiales si son independientes:
-Shell Script
-	git remote add origin ttps://github.com/sintesisLabEstudio/codigoCrudUsuariosSimulaSqlite.git 
-	
-	git pull origin main --allow-unrelated-histories
 
-Resumen como buena práctica:
-Proyecto nuevo desde GitHub: 
-	Usa git clone.
+sintesisLab# 1. Inicializa Git en el proyecto local (si no lo habías hecho)
+git init
 
-Proyecto existente en tu PC que se conecta a GitHub por primera vez: 
-Configura el remoto 
-	(git remote add origin) y haz 
-	git pull origin main --allow-unrelated-histories 
-para recibir cualquier archivo que ya estuviera en GitHub 
-(como el README o .gitignore) antes de subir tus propios archivos.
+Conecta la carpeta local con tu repositorio de GitHub
+git remote add origin https://github.com/sintesisLabEstudio/CotizadorSolarPyme.GUI.git
 
------------------------------------------------------
+Prepara todos los archivos actualizados
+git add .
 
-Paso 1: Guardar cambios en el repositorio local
-Descripción: Registra todos los archivos modificados y creados en el historial de control de versiones de Git local.
-Comando: git commit -m "Simula V0"
+Registra los cambios con un mensaje
+git commit -m "Versión actualizada del Cotizador Solar"
 
-Paso 2: Renombrar la rama principal a main
-Descripción: Cambia el nombre de la rama actual (por defecto master) a main para coincidir con la rama estándar de GitHub.
-Comando: git branch -M main
+Renombrar la rama local a 'master'
+git branch -M master
 
-Paso 3: Subir el código al servidor remoto y autenticarse
-Descripción: Envía la rama main al servidor remoto (origin). Solicita usuario (sintesisLabEstudio) y contraseña (donde se ingresa el Personal Access Token / PAT).
-Comando: git push -u origin main
+Subir el código a la rama master en GitHub
+git push -u origin master
 
-Paso 4: Resolver conflicto de rechazo (Force Push)
-Descripción: Soluciona el error ! [rejected] provocado por archivos previos creados automáticamente en GitHub (como un README.md), sobrescribiendo el remoto con la versión local.
-Comando: git push -u origin main --force
-
-Comando alternativo (en lugar de forzar):
-Si se prefiere conservar el contenido remoto y fusionarlo con el local:
-git pull origin main --allow-unrelated-histories
-git push -u origin main
-
-
-----------------
-MANUAL DE EJECUCIÓN: SUBIDA REPETITIVA DE CAMBIOS A GITHUB
-
-Paso 1: Preparar los archivos modificados
-Descripción: Agrega todos los archivos nuevos y modificados al área de preparación para ser incluidos en el envío.
-Comando: git add .
-
-Paso 2: Guardar los cambios localmente
-Descripción: Registra un punto de control en el historial local con un mensaje explicativo de los avances.
-Comando: git commit -m "Descripción de los cambios"
-
-Paso 3: Enviar los cambios a GitHub
-Descripción: Sube los nuevos commits de la rama local directamente al servidor remoto.
-Comando: 
-	git push 
-	--- emergencias ---
-	git push --set-upstream origin main
-	git push --set-upstream origin main --force
-
-☼
 sintesisLabEstudio
-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
+-------------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----------------
 
-EN PARALELO 10:31 p. m. 26/09/2026
-codigoCrudUsuariosSimulaSqlite
-
-
-//con clave key git
-git push https://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@github.com/sintesisLabEstudio/Simula.git main
-
-	git status
------------------
-para guardar carpeta desarrollo fuera de codigo
-git add ..
-git commit -m "Doc: actualiza notas de desarrollo y tutor"
-git push
-
--------------------- 
-para etiquetar 
-# 1. Crear el tag para la versión 0.5
-git tag -a v0.5 -m "Versión 0.5 - Cálculo con objetos y Utiles"
-
-# 2. Subir commits y tags al repositorio remoto
-git push origin main --tags
-----------------------
-para rama nueva con persistencia 
-git checkout -b feature/persistencia
-
-================================================================================
-MANUAL DE GIT: RESOLUCIÓN DE CONFLICTOS AL HACER PUSH / PULL REBASE CON UNTRACKED
-================================================================================
-
-1. DESCRIPCIÓN DEL PROBLEMA
---------------------------------------------------------------------------------
-Al intentar enviar cambios locales con 'git push', el servidor remoto rechazó 
-la operación debido a que la rama remota contenía avances que no estaban en local.
-
-Al ejecutar 'git pull origin main --rebase', el proceso se abortó porque existían 
-archivos no rastreados (untracked files) en la carpeta 'desarrollo/' que colisionaban 
-con los mismos archivos que venían desde GitHub.
-
-
-2. MENSAJES DE ERROR RECIBIDOS
---------------------------------------------------------------------------------
-- Error de Push rechazado:
-  ! [rejected] main -> main (fetch first)
-  error: failed to push some refs to 'https://github.com/.../Simula.git'
-
-- Error de Pull abortado por archivos untracked:
-  error: The following untracked working tree files would be overwritten by checkout:
-         desarrollo/...
-  Please move or remove them before you switch branches. Aborting
-
-
-3. SECUENCIA DE COMANDOS PARA LA SOLUCIÓN (PASO A PASO)
---------------------------------------------------------------------------------
-
-Paso 1: Guardar temporalmente el trabajo y los archivos no rastreados
-> git stash --include-untracked
-
-Paso 2: Traer los cambios remotos y reestructurar la historia local encima
-> git pull origin main --rebase
-
-Paso 3: Recuperar el trabajo resguardado desde el stash
-> git stash pop
-
-Paso 4: Subir los commits consolidados hacia GitHub
-> git push origin main
-
-Paso 5: Limpiar la memoria temporal del stash (Opcional)
-> git stash drop
-
-
-4. GLOSARIO Y CONCEPTOS CLAVE
---------------------------------------------------------------------------------
-+-------------------------------+-------------------------------------------------------------------+
-| COMANDO / CONCEPTO            | DESCRIPCIÓN Y USO EN EL CASO                                      |
-+-------------------------------+-------------------------------------------------------------------+
-| git pull origin main --rebase | Sincroniza la rama remota y coloca los commits locales al final   |
-|                               | de la historia, evitando commits de merge innecesarios.           |
-+-------------------------------+-------------------------------------------------------------------+
-| git stash --include-untracked | Resguarda los cambios actuales y los archivos nuevos no rastreados|
-|                               | (untracked), dejando el directorio de trabajo limpio.             |
-+-------------------------------+-------------------------------------------------------------------+
-| git stash pop                 | Aplica y restaura los cambios previamente guardados en el stash.  |
-+-------------------------------+-------------------------------------------------------------------+
-| git stash drop                | Borra el registro temporal almacenado en el stash.               |
-+-------------------------------+-------------------------------------------------------------------+
-| LF / CRLF Warning             | Advertencia del sistema sobre saltos de línea entre Unix (LF)     |
-|                               | y Windows (CRLF). No interrumpe ni daña el flujo de trabajo.      |
-+-------------------------------+-------------------------------------------------------------------+
-================================================================================
