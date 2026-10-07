@@ -48,6 +48,8 @@ namespace CotizadorSolarPyme.GUI
             txtPaneles = new TextBox();
             btnLimpiar = new Button();
             grpResultados = new GroupBox();
+            lblResViabilidad = new Label();
+            label1 = new Label();
             lblResultadoTotal = new Label();
             lblTituloResultado = new Label();
             lblValorTotalNeto = new Label();
@@ -59,9 +61,6 @@ namespace CotizadorSolarPyme.GUI
             btnSalir = new Button();
             toolTip1 = new ToolTip(components);
             bindingSource1 = new BindingSource(components);
-            checkedListBox1 = new CheckedListBox();
-            label1 = new Label();
-            lblResViabilidad = new Label();
             grpDatosClientes.SuspendLayout();
             grpDimensionamiento.SuspendLayout();
             grpResultados.SuspendLayout();
@@ -190,7 +189,6 @@ namespace CotizadorSolarPyme.GUI
             grpDimensionamiento.Size = new Size(403, 170);
             grpDimensionamiento.TabIndex = 8;
             grpDimensionamiento.TabStop = false;
-            // Texto corregido: eliminar comilla sobrante que generaba una incoherencia visual
             grpDimensionamiento.Text = "Dimensionamiento Técnico";
             // 
             // lblPresupuesto
@@ -283,6 +281,24 @@ namespace CotizadorSolarPyme.GUI
             grpResultados.Text = "Resultados";
             grpResultados.Enter += grpResultados_Enter;
             // 
+            // lblResViabilidad
+            // 
+            lblResViabilidad.AutoSize = true;
+            lblResViabilidad.Location = new Point(208, 116);
+            lblResViabilidad.Name = "lblResViabilidad";
+            lblResViabilidad.Size = new Size(74, 15);
+            lblResViabilidad.TabIndex = 9;
+            lblResViabilidad.Text = "No evaluado";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(208, 89);
+            label1.Name = "label1";
+            label1.Size = new Size(100, 15);
+            label1.TabIndex = 8;
+            label1.Text = "Viabilidad técnica";
+            // 
             // lblResultadoTotal
             // 
             lblResultadoTotal.AutoSize = true;
@@ -355,6 +371,7 @@ namespace CotizadorSolarPyme.GUI
             lblSubTotal.Size = new Size(55, 15);
             lblSubTotal.TabIndex = 0;
             lblSubTotal.Text = "Sub Total";
+            // 
             // btnSalir
             // 
             btnSalir.BackColor = Color.FromArgb(220, 38, 38);
@@ -367,43 +384,12 @@ namespace CotizadorSolarPyme.GUI
             btnSalir.UseVisualStyleBackColor = false;
             btnSalir.Click += btnSalir_Click;
             // 
-            // checkedListBox1
-            // 
-            checkedListBox1.FormattingEnabled = true;
-            checkedListBox1.Location = new Point(235, 0);
-            checkedListBox1.Name = "checkedListBox1";
-            // Control aparentemente no usado en el diseño visual; ocultado y tamaño ajustado
-            checkedListBox1.Size = new Size(82, 64);
-            checkedListBox1.TabIndex = 10;
-            checkedListBox1.Visible = false;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(208, 89);
-            label1.Name = "label1";
-            label1.Size = new Size(86, 15);
-            label1.TabIndex = 8;
-            // Cambiado para evitar duplicar "Resultado total" en el mismo grupo
-            label1.Text = "Viabilidad técnica";
-            // 
-            // lblResViabilidad
-            // 
-            lblResViabilidad.AutoSize = true;
-            lblResViabilidad.Location = new Point(208, 116);
-            lblResViabilidad.Name = "lblResViabilidad";
-            lblResViabilidad.Size = new Size(86, 15);
-            lblResViabilidad.TabIndex = 9;
-            // Texto por defecto aclaratorio: será actualizado tras el cálculo
-            lblResViabilidad.Text = "No evaluado";
-            // 
             // FormCotizador
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.DarkCyan;
             ClientSize = new Size(449, 472);
-            Controls.Add(checkedListBox1);
             Controls.Add(btnSalir);
             Controls.Add(grpResultados);
             Controls.Add(btnLimpiar);
@@ -457,7 +443,6 @@ namespace CotizadorSolarPyme.GUI
         private Button btnSalir;
         private ToolTip toolTip1;
         private BindingSource bindingSource1;
-        private CheckedListBox checkedListBox1;
         private TextBox txtPaneles;
         private Label lblResViabilidad;
         private Label label1;

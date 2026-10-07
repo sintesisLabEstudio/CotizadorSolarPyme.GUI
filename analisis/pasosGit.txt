@@ -3,11 +3,14 @@ sintesisLab
 #Inicializa Git en el proyecto local (si no lo habías hecho)
 git init
 
+git status
+
 #Conecta la carpeta local con tu repositorio de GitHub
 git remote add origin https://github.com/sintesisLabEstudio/CotizadorSolarPyme.GUI.git
 
 #Prepara todos los archivos actualizados
 git add .
+git add -f .
 
 #Registra los cambios con un mensaje
 git commit -m "Versión actualizada del Cotizador Solar"
@@ -21,4 +24,22 @@ git push -u origin master --force
 
 sintesisLabEstudio
 -------------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----------------
+
+PARA ESTE GUION SUBIRLO 
+git add -f guion/pasosGit.txt
+git add *.cs *.csproj *.sln
+git commit -m "Inclusión de guion y código fuente"
+git push -u origin master --force
+
+# 1. Ignorar carpetas temporales de Visual Studio que causan bloqueos
+".vs/`nbin/`nobj/" | Out-File -FilePath .gitignore -Encoding utf8 -Append
+git commit -m "Actualizacion del proyecto y guion"
+git branch -M master
+git push -u origin master --force
+-------------
+01:45 p. m. 07/10/2026
+git status 
+git add . 
+git commit -m "version 2 con validaciones"
+git push -u origin master --force
 

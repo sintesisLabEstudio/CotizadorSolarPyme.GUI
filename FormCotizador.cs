@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection.Emit;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 using System.Drawing; // Necesario para la propiedad Color
 
 //IPVG
@@ -42,7 +43,6 @@ namespace CotizadorSolarPyme.GUI
             cboComuna.Items.Add("Chillán");
             cboComuna.SelectedIndex = 0;
         }
-
 
         private void LimpiarFormulario()
         {
@@ -93,14 +93,11 @@ namespace CotizadorSolarPyme.GUI
 
         private void label3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void FormCotizador_Load_1(object sender, EventArgs e)
         {
-
         }
-
 
         private void btnCalcularCotizacion_Click(object sender, EventArgs e)
         {
@@ -127,7 +124,6 @@ namespace CotizadorSolarPyme.GUI
                 cboComuna.DroppedDown = true; // Abre automáticamente la lista desplegable
                 return;
             }
-
             // necesitamos numeros
             string panelesInput = txtPaneles.Text.Trim();
             string tarifaInput = txtTarifaPanel.Text.Trim();
@@ -139,14 +135,15 @@ namespace CotizadorSolarPyme.GUI
             bool parseInversor = double.TryParse(inversorInput, out double valorInversor);
             bool parsePresupuesto = double.TryParse(presupuestoInput, out double presupuestoCliente);
 
-            //VALIDA 
+            //VALIDACIONES
+            //vatidad de paneles
             if (!parsePaneles || cantidadPaneles <= 0)
             {
                 MessageBox.Show("Ingrese una cantidad de paneles válida (entero mayor que 0).", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPaneles.Focus();
                 return;
             }
-
+            //tarifa por panel valida
             if (!parseTarifa || tarifaPanel < 50 || tarifaPanel > 1500)
             {
                 MessageBox.Show("Ingrese una tarifa por panel válida (mayor que 50 U$ y menor que 500 U$).", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -154,6 +151,7 @@ namespace CotizadorSolarPyme.GUI
                 txtTarifaPanel.SelectAll();
                 return;
             }
+            //inversor valido
             if (!parseInversor || valorInversor < 100 || valorInversor > 10000)
             {
                 MessageBox.Show("Ingrese una valor de Inversor valido (mayor que 100 U$ y menor que 10000 U$).", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -161,92 +159,117 @@ namespace CotizadorSolarPyme.GUI
                 txtInversor.SelectAll();
                 return;
             }
-            //// Cálculo simple de cotización
-                double subtotal = cantidadPaneles * tarifaPanel;
-            //// Incluir inversor si se proporcionó un valor válido
-            //    subtotal += valorInversor;
+            //monto disponible valido   
+            if (!parsePresupuesto || presupuestoCliente < 0)
+            {
+                MessageBox.Show("Ingrese un presupuesto válido (mayor o igual a 0 U$).", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPresupuesto.Focus();
+                txtPresupuesto.SelectAll();
+                return;
+            }
+            // Cálculo simple de cotización
+            double subtotal = cantidadPaneles * tarifaPanel;
+            // Incluir inversor si se proporcionó un valor válido
+            subtotal += valorInversor;
             //// Añadir costo estimado por baterías si el usuario lo solicita
-            //if (chkIncluirBaterias.Checked)
-            //{
-            //    // Valor de ejemplo; reemplazar por la lógica real si está disponible
-            //    subtotal += 500.0;
-            //}
-            //
-            //// Aplicar descuento por fomento si corresponde (10% en este ejemplo)
-            //if (chkFomento.Checked)
-            //{
-            //    subtotal *= 0.90;
-            //}
-            //// Calcular IVA y total
-            //const double IVA_RATE = 0.19; // 19% ejemplo
-            //double iva = Math.Round(subtotal * IVA_RATE, 2);
-            //double totalNeto = Math.Round(subtotal + iva, 2);
-            //
-            //// Mostrar resultados en UI (utiliza la cultura ya configurada)
-            //lblValorSubTotal.Text = subtotal.ToString("C", CultureInfo.CurrentCulture);
-            //lblValorIVA.Text = iva.ToString("C", CultureInfo.CurrentCulture);
-            //lblValorTotalNeto.Text = totalNeto.ToString("C", CultureInfo.CurrentCulture);
-            //lblResultadoTotal.Text = totalNeto.ToString("C", CultureInfo.CurrentCulture);
-            //grpResultados.Enabled = true;
-            //
-            //// Evaluación simple de viabilidad según presupuesto ingresado
-            //if (parsePresupuesto && presupuestoCliente > 0)
-            //{
-            //    bool viable = totalNeto <= presupuestoCliente;
-            //    lblResViabilidad.Text = viable ? "Viable" : "No viable";
-            //    lblResViabilidad.ForeColor = viable ? Color.DarkGreen : Color.DarkRed;
-            //}
-            //else
-            //{
-            //    lblResViabilidad.Text = "No evaluado";
-            //    lblResViabilidad.ForeColor = Color.DarkGray;
-            //}
+            if (chkIncluirBaterias.Checked)
+            {
+                // Valor por defecto histórico: 500.0 USD
+                subtotal += 500.0;
+                string entradaBaterias = Interaction.InputBox("Ingrese el valor total de las baterías (USD):", "Valor baterías", "500");
+                if (!string.IsNullOrWhiteSpace(entradaBaterias))
+                {
+                    if (double.TryParse(entradaBaterias.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double valorBaterias) && valorBaterias >= 0)
+                    {
+                        subtotal += valorBaterias;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Valor de baterías inválido. Operación cancelada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    // Si no ingresa valor, preguntar si desea mantener la inclusión sin valor
+                    var r = MessageBox.Show("No ingresó un valor para las baterías. ¿Desea cancelar su inclusión?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (r == DialogResult.Yes)
+                    {
+                        chkIncluirBaterias.Checked = false;
+                    }
+                }
+            }
+            // Aplicar descuento por fomento si corresponde (10% en este ejemplo)
+            if (chkFomento.Checked)
+            {
+                subtotal *= 0.90;
+            }
+            // Calcular IVA y total
+            const double IVA_RATE = 0.19; // 19% ejemplo
+            double iva = Math.Round(subtotal * IVA_RATE, 2);
+            double totalNeto = Math.Round(subtotal + iva, 2);
+            //Mostrar resultados en UI (utiliza la cultura ya configurada)
+            lblValorSubTotal.Text = subtotal.ToString("C", CultureInfo.CurrentCulture);
+            lblValorIVA.Text = iva.ToString("C", CultureInfo.CurrentCulture);
+            lblValorTotalNeto.Text = totalNeto.ToString("C", CultureInfo.CurrentCulture);
+            lblResultadoTotal.Text = totalNeto.ToString("C", CultureInfo.CurrentCulture);
+            grpResultados.Enabled = true;
+            // Evaluación simple de viabilidad según presupuesto ingresado
+            if (parsePresupuesto && presupuestoCliente > 0)
+            {
+                bool viable = totalNeto <= presupuestoCliente;
+                lblResViabilidad.Text = viable ? "Viable" : "No viable";
+                lblResViabilidad.ForeColor = viable ? Color.DarkGreen : Color.DarkRed;
+            }
+            else
+            {
+                lblResViabilidad.Text = "No evaluado";
+                lblResViabilidad.ForeColor = Color.DarkGray;
+            }
         }
 
-
-
         private void btnSalir_Click(object sender, EventArgs e)
-{
-DialogResult resultado = MessageBox.Show("¿Está seguro que desea salir?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-if (resultado == DialogResult.Yes)
-{
-    Application.Exit();
-}
-}
+        {
+            DialogResult resultado = MessageBox.Show("¿Está seguro que desea salir?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (resultado == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
 
-private void txtPresupuesto_TextChanged(object sender, EventArgs e)
-{
+        private void txtPresupuesto_TextChanged(object sender, EventArgs e)
+        {
 
-}
+        }
 
-private void txtNombrePyme_TextChanged(object sender, EventArgs e)
-{
+        private void txtNombrePyme_TextChanged(object sender, EventArgs e)
+        {
 
-}
+        }
 
-private void txtTarifaPanel_TextChanged(object sender, EventArgs e)
-{
+        private void txtTarifaPanel_TextChanged(object sender, EventArgs e)
+        {
 
-}
+        }
 
-private void txtPaneles_TextChanged(object sender, EventArgs e)
-{
-// Manejador vacío: conservar para futuras validaciones de entrada
-}
+        private void txtPaneles_TextChanged(object sender, EventArgs e)
+        {
+            // Manejador vacío: conservar para futuras validaciones de entrada
+        }
 
-private void cboComuna_SelectedIndexChanged(object sender, EventArgs e)
-{
+        private void cboComuna_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
-}
+        }
 
-private void grpResultados_Enter(object sender, EventArgs e)
-{
+        private void grpResultados_Enter(object sender, EventArgs e)
+        {
 
-}
+        }
 
-private void lblResultadoTotal_Click(object sender, EventArgs e)
-{
+        private void lblResultadoTotal_Click(object sender, EventArgs e)
+        {
 
-}
-}
+        }
+    }
 }

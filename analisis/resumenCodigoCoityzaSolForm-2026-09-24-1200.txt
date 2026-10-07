@@ -1,0 +1,521 @@
+FECHA: 2026-09-24 12:00
+
+ARCHIVOS:
+	|nombre |.extension | ruta | utilidad
+
+	Program.cs | .cs | ./Program.cs | Punto de entrada de la aplicación WinForms, instancia FormCotizador
+	FormCotizador.cs | .cs | ./FormCotizador.cs | Lógica de negocio y eventos del formulario principal
+	FormCotizador.Designer.cs | .cs | ./FormCotizador.Designer.cs | Código generado: definición de controles y layout
+	FormCotizador.resx | .resx | ./FormCotizador.resx | RECURSO (ICONOS/TEXTOS) - PARTE DEL TEJIDO (IMPRESCINDIBLE)
+	Form1.resx | .resx | ./Form1.resx | RECURSO - (POSIBLEMENTE NO USADO) - PARTE DEL TEJIDO
+	README.md | .md | ./README.md | DOCUMENTACIÓN - ARCHIVO RECICLAJE
+	.gitignore | .gitignore | ./ | CONFIGURACIÓN GIT - ARCHIVO RECICLAJE
+	.gitattributes | .gitattributes | ./ | CONFIGURACIÓN GIT - ARCHIVO RECICLAJE
+
+
+INSTRUCCIONES DE LECTURA
+DETALLE: Listado didáctico con código completo de archivos fuente principales (.cs). Archivos accesorio (.resx, md, git) listados sin código.
+DESCRIPCION: Se incluyen las funciones clave, eventos y relaciones. COMENTARIOS DE SUGERENCIA EN MAYÚSCULAS insertados en el código como // SUGERENCIA: ... para facilitar mantenimiento.
+
+---
+
+Program.cs
+	DETALLE: Punto de entrada; inicializa configuraciones de la aplicación y abre FormCotizador.
+	DESCRIPCION: No lógica compleja; mantiene referencia a FormCotizador.
+	RELACIONES: Llama al constructor de FormCotizador (FormCotizador.cs) que a su vez llama InitializeComponent (Designer) y setup.
+
+codigo:
+// SUGERENCIA: ESTE ARCHIVO DEBE PERMANECER SIMPLE. AÑADIR EXCEPCION HANDLING SOLO SI ES NECESARIO.
+
+namespace CotizadorSolarPyme.GUI
+{
+	internal static class Program
+	{
+		/// <summary>
+		///  The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		static void Main()
+		{
+			// SUGERENCIA: AQUI SE PUEDE CONFIGURAR LOGGING O CULTURE GLOBAL SI ES NECESARIO
+			ApplicationConfiguration.Initialize();
+			Application.Run(new FormCotizador());
+		}
+	}
+}
+
+---
+
+FormCotizador.cs
+	DETALLE: Lógica del formulario: configuración inicial, manejo de eventos (limpiar, calculos pendientes), actualización de controles.
+	DESCRIPCION: Contiene constructor que invoca InitializeComponent y ConfigurarEntornoInicial; varios handlers vacíos generados por designer; método btnLimpiar_Click realiza limpieza de campos.
+	RELACIONES: Usa controles declarados en FormCotizador.Designer.cs: cboComuna, txtNombrePyme, txtCantidadPaneles, txtPrecioPanel, chkDescuentoFomento, lblValorTotalNeto.
+
+codigo:
+// SUGERENCIA: REVISAR NOMBRES DE CONTROLES EN EL DESIGNER SI HAY ERRORES DE COMPILACIÓN. SI HAY CAMBIOS DE NAMESPACE, ASEGURAR COHERENCIA.
+
+using System;
+using System.Globalization;
+using System.Windows.Forms;
+
+namespace CotizadorSolarPyme.GUI
+{
+	public partial class FormCotizador : Form
+	{
+		public FormCotizador()
+		{
+			InitializeComponent();
+			ConfigurarEntornoInicial(); //add
+		}
+
+		private void ConfigurarEntornoInicial()
+		{
+			// Estandarizar formato de punto decimal (.) regional
+			CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+
+			// Cargar comunas de la Región del Biobío en el ComboBox
+			cboComuna.Items.Clear();
+			cboComuna.Items.Add("Concepción");
+			cboComuna.Items.Add("Chillán");
+			cboComuna.Items.Add("Los Ángeles");
+			cboComuna.Items.Add("Coronel");
+			cboComuna.Items.Add("Talcahuano");
+			cboComuna.SelectedIndex = 0;
+
+			// SUGERENCIA: VALIDAR QUE cboComuna NO SEA NULL SI EL DISEÑADOR NO CARGA (EJ: CONTROLES PERSONALIZADOS)
+		}
+
+		private void btnLimpiar_Click(object sender, EventArgs e)
+		{
+			txtNombrePyme.Clear();
+			txtCantidadPaneles.Clear();
+			txtPrecioPanel.Clear();
+			chkDescuentoFomento.Checked = false;
+			// SUGERENCIA: lblValorTotalNeto ES EL CONTROL DEFINIDO EN DESIGNER; USARLO EN LUGAR DE lblResultadoTotal
+			lblValorTotalNeto.Text = "$0.00 USD";
+			txtNombrePyme.Focus();
+		}
+
+		private void FormCotizador_Load(object sender, EventArgs e)
+		{
+
+		}
+
+		private void label1_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void label3_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void FormCotizador_Load_1(object sender, EventArgs e)
+		{
+
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void txtCantidadPaneles_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+	}
+}
+
+// SUGERENCIA: AQUI PUEDE AGREGARSE UN MÉTODO CalcularCotizacion() QUE LEA txtCantidadPaneles, txtPrecioPanel, chkDescuentoFomento Y ACTUALICE lblValorSubTotal, lblValorIVA, lblValorTotalNeto. IMPLEMENTAR VALIDACIONES (PARSE CON DECIMAL.TryParse CON CultureInfo.InvariantCulture).
+
+// EJEMPLO ALTERNATIVO (METODO):
+// private void CalcularCotizacion()
+// {
+//     // SUGERENCIA: VALIDAR CAMPOS ANTES
+//     if(!int.TryParse(txtCantidadPaneles.Text, out int cantidad)) return;
+//     if(!decimal.TryParse(txtPrecioPanel.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal precio)) return;
+//     decimal subtotal = cantidad * precio;
+//     decimal iva = subtotal * 0.19m;
+//     decimal total = subtotal + iva;
+//     lblValorSubTotal.Text = subtotal.ToString("C", CultureInfo.InvariantCulture);
+//     lblValorIVA.Text = iva.ToString("C", CultureInfo.InvariantCulture);
+//     lblValorTotalNeto.Text = total.ToString("C", CultureInfo.InvariantCulture);
+// }
+
+---
+
+FormCotizador.Designer.cs
+	DETALLE: Código generado por el diseñador; declara controles, layout y propiedades. Cambiar manualmente solo si se entiende impacto.
+	DESCRIPCION: Contiene grupos (GroupBox): grpDatosClientes, grpEspecificaciones, grpResultados; labels y textboxs para entrada y visualización; botones para calcular/limpiar.
+	RELACIONES: Los nombres de controles usados en FormCotizador.cs deben coincidir exactamente con estas declaraciones privadas al final del archivo.
+
+codigo:
+// SUGERENCIA: NO EDITAR ESTE ARCHIVO DIRECTAMENTE A MENOS QUE SEPAS LO QUE HACES. SI EDITAS, REBUILD PARA QUE EL DISEÑADOR LO RECARGUE.
+
+namespace CotizadorSolarPyme.GUI
+{
+	partial class FormCotizador
+	{
+		/// <summary>
+		///  Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
+
+		/// <summary>
+		///  Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Windows Form Designer generated code
+
+		/// <summary>
+		///  Required method for Designer support - do not modify
+		///  the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			grpDatosClientes = new GroupBox();
+			lblNombreComuna = new Label();
+			cboComuna = new ComboBox();
+			txtNombrePyme = new TextBox();
+			lblNombrePyme = new Label();
+			label3 = new Label();
+			txtCantidadPaneles = new TextBox();
+			btnCalcularCotizacion = new Button();
+			chkIncluirBaterias = new CheckBox();
+			txtPrecioPanel = new TextBox();
+			lblTituloPrecio = new Label();
+			grpEspecificaciones = new GroupBox();
+			chkDescuentoFomento = new CheckBox();
+			btnLimpiar = new Button();
+			grpResultados = new GroupBox();
+			lblTotalNeto = new Label();
+			lblIva = new Label();
+			lblSubTotal = new Label();
+			lblValorSubTotal = new Label();
+			lblValorIVA = new Label();
+			lblValorTotalNeto = new Label();
+			grpDatosClientes.SuspendLayout();
+			grpEspecificaciones.SuspendLayout();
+			grpResultados.SuspendLayout();
+			SuspendLayout();
+			// 
+			// grpDatosClientes
+			// 
+			grpDatosClientes.Controls.Add(lblNombreComuna);
+			grpDatosClientes.Controls.Add(cboComuna);
+			grpDatosClientes.Controls.Add(txtNombrePyme);
+			grpDatosClientes.Controls.Add(lblNombrePyme);
+			grpDatosClientes.Location = new Point(40, 39);
+			grpDatosClientes.Margin = new Padding(3, 2, 3, 2);
+			grpDatosClientes.Name = "grpDatosClientes";
+			grpDatosClientes.Padding = new Padding(3, 2, 3, 2);
+			grpDatosClientes.Size = new Size(322, 110);
+			grpDatosClientes.TabIndex = 0;
+			grpDatosClientes.TabStop = false;
+			grpDatosClientes.Text = "Datos de la PYME Cliente";
+			// 
+			// lblNombreComuna
+			// 
+			lblNombreComuna.AutoSize = true;
+			lblNombreComuna.Location = new Point(179, 29);
+			lblNombreComuna.Name = "lblNombreComuna";
+			lblNombreComuna.Size = new Size(53, 15);
+			lblNombreComuna.TabIndex = 3;
+			lblNombreComuna.Text = "Comuna";
+			// 
+			// cboComuna
+			// 
+			cboComuna.FormattingEnabled = true;
+			cboComuna.Location = new Point(149, 58);
+			cboComuna.Margin = new Padding(3, 2, 3, 2);
+			cboComuna.Name = "cboComuna";
+			cboComuna.Size = new Size(133, 23);
+			cboComuna.TabIndex = 2;
+			// 
+			// txtNombrePyme
+			// 
+			txtNombrePyme.Location = new Point(19, 58);
+			txtNombrePyme.Margin = new Padding(3, 2, 3, 2);
+			txtNombrePyme.Name = "txtNombrePyme";
+			txtNombrePyme.Size = new Size(110, 23);
+			txtNombrePyme.TabIndex = 1;
+			// 
+			// lblNombrePyme
+			// 
+			lblNombrePyme.AutoSize = true;
+			lblNombrePyme.Location = new Point(23, 29);
+			lblNombrePyme.Name = "lblNombrePyme";
+			lblNombrePyme.Size = new Size(112, 15);
+			lblNombrePyme.TabIndex = 0;
+			lblNombrePyme.Text = "Nombre de la Pyme";
+			lblNombrePyme.Click += label1_Click;
+			// 
+			// label3
+			// 
+			label3.AutoSize = true;
+			label3.Location = new Point(15, 29);
+			label3.Name = "label3";
+			label3.Size = new Size(114, 15);
+			label3.TabIndex = 5;
+			label3.Text = "Cantidad de paneles";
+			label3.Click += label3_Click;
+			// 
+			// txtCantidadPaneles
+			// 
+			txtCantidadPaneles.Location = new Point(19, 46);
+			txtCantidadPaneles.Margin = new Padding(3, 2, 3, 2);
+			txtCantidadPaneles.Name = "txtCantidadPaneles";
+			txtCantidadPaneles.Size = new Size(110, 23);
+			txtCantidadPaneles.TabIndex = 4;
+			txtCantidadPaneles.TextChanged += txtCantidadPaneles_TextChanged;
+			// 
+			// btnCalcularCotizacion
+			// 
+			btnCalcularCotizacion.Location = new Point(149, 107);
+			btnCalcularCotizacion.Name = "btnCalcularCotizacion";
+			btnCalcularCotizacion.Size = new Size(133, 23);
+			btnCalcularCotizacion.TabIndex = 1;
+			btnCalcularCotizacion.Text = "Calcular Cotizacion";
+			btnCalcularCotizacion.UseVisualStyleBackColor = true;
+			// 
+			// chkIncluirBaterias
+			// 
+			chkIncluirBaterias.AutoSize = true;
+			chkIncluirBaterias.Location = new Point(19, 107);
+			chkIncluirBaterias.Name = "chkIncluirBaterias";
+			chkIncluirBaterias.Size = new Size(100, 19);
+			chkIncluirBaterias.TabIndex = 2;
+			chkIncluirBaterias.Text = "IncluirBaterias";
+			chkIncluirBaterias.UseVisualStyleBackColor = true;
+			// 
+			// txtPrecioPanel
+			// 
+			txtPrecioPanel.Location = new Point(149, 46);
+			txtPrecioPanel.Name = "txtPrecioPanel";
+			txtPrecioPanel.Size = new Size(100, 23);
+			txtPrecioPanel.TabIndex = 6;
+			// 
+			// lblTituloPrecio
+			// 
+			lblTituloPrecio.AutoSize = true;
+			lblTituloPrecio.Location = new Point(149, 29);
+			lblTituloPrecio.Name = "lblTituloPrecio";
+			lblTituloPrecio.Size = new Size(93, 15);
+			lblTituloPrecio.TabIndex = 7;
+			lblTituloPrecio.Text = "Precio por Panel";
+			// 
+			// grpEspecificaciones
+			// 
+			grpEspecificaciones.Controls.Add(chkDescuentoFomento);
+			grpEspecificaciones.Controls.Add(btnCalcularCotizacion);
+			grpEspecificaciones.Controls.Add(lblTituloPrecio);
+			grpEspecificaciones.Controls.Add(chkIncluirBaterias);
+			grpEspecificaciones.Controls.Add(txtPrecioPanel);
+			grpEspecificaciones.Controls.Add(txtCantidadPaneles);
+			grpEspecificaciones.Controls.Add(label3);
+			grpEspecificaciones.Location = new Point(40, 179);
+			grpEspecificaciones.Name = "grpEspecificaciones";
+			grpEspecificaciones.Size = new Size(322, 155);
+			grpEspecificaciones.TabIndex = 8;
+			grpEspecificaciones.TabStop = false;
+			grpEspecificaciones.Text = "\"Dimensionamiento Técnico";
+			// 
+			// chkDescuentoFomento
+			// 
+			chkDescuentoFomento.AutoSize = true;
+			chkDescuentoFomento.Location = new Point(19, 82);
+			chkDescuentoFomento.Name = "chkDescuentoFomento";
+			chkDescuentoFomento.Size = new Size(303, 19);
+			chkDescuentoFomento.TabIndex = 9;
+			chkDescuentoFomento.Text = "Aplicar Descuento Estatal por Generación Distribuida";
+			chkDescuentoFomento.UseVisualStyleBackColor = true;
+			// 
+			// btnLimpiar
+			// 
+			btnLimpiar.Location = new Point(135, 453);
+			btnLimpiar.Name = "btnLimpiar";
+			btnLimpiar.Size = new Size(137, 23);
+			btnLimpiar.TabIndex = 8;
+			btnLimpiar.Text = "Limpiar Formulario";
+			btnLimpiar.UseVisualStyleBackColor = true;
+			btnLimpiar.Click += button1_Click;
+			// 
+			// grpResultados
+			// 
+			grpResultados.Controls.Add(lblValorTotalNeto);
+			grpResultados.Controls.Add(lblValorIVA);
+			grpResultados.Controls.Add(lblValorSubTotal);
+			grpResultados.Controls.Add(lblTotalNeto);
+			grpResultados.Controls.Add(lblIva);
+			grpResultados.Controls.Add(lblSubTotal);
+			grpResultados.Location = new Point(40, 352);
+			grpResultados.Name = "grpResultados";
+			grpResultados.Size = new Size(322, 124);
+			grpResultados.TabIndex = 9;
+			grpResultados.TabStop = false;
+			grpResultados.Text = "Resultados";
+			// 
+			// lblTotalNeto
+			// 
+			lblTotalNeto.AutoSize = true;
+			lblTotalNeto.Location = new Point(206, 30);
+			lblTotalNeto.Name = "lblTotalNeto";
+			lblTotalNeto.Size = new Size(61, 15);
+			lblTotalNeto.TabIndex = 2;
+			lblTotalNeto.Text = "Total Neto";
+			// 
+			// lblIva
+			// 
+			lblIva.AutoSize = true;
+			lblIva.Location = new Point(136, 30);
+			lblIva.Name = "lblIva";
+			lblIva.Size = new Size(24, 15);
+			lblIva.TabIndex = 1;
+			lblIva.Text = "IVA";
+			// 
+			// lblSubTotal
+			// 
+			lblSubTotal.AutoSize = true;
+			lblSubTotal.Location = new Point(46, 30);
+			lblSubTotal.Name = "lblSubTotal";
+			lblSubTotal.Size = new Size(55, 15);
+			lblSubTotal.TabIndex = 0;
+			lblSubTotal.Text = "Sub Total";
+			// 
+			// lblValorSubTotal
+			// 
+			lblValorSubTotal.AutoSize = true;
+			lblValorSubTotal.Location = new Point(46, 57);
+			lblValorSubTotal.Name = "lblValorSubTotal";
+			lblValorSubTotal.Size = new Size(37, 15);
+			lblValorSubTotal.TabIndex = 3;
+			lblValorSubTotal.Text = "______";
+			// 
+			// lblValorIVA
+			// 
+			lblValorIVA.AutoSize = true;
+			lblValorIVA.Location = new Point(136, 57);
+			lblValorIVA.Name = "lblValorIVA";
+			lblValorIVA.Size = new Size(37, 15);
+			lblValorIVA.TabIndex = 4;
+			lblValorIVA.Text = "______";
+			// 
+			// lblValorTotalNeto
+			// 
+			lblValorTotalNeto.AutoSize = true;
+			lblValorTotalNeto.Location = new Point(212, 57);
+			lblValorTotalNeto.Name = "lblValorTotalNeto";
+			lblValorTotalNeto.Size = new Size(37, 15);
+			lblValorTotalNeto.TabIndex = 5;
+			lblValorTotalNeto.Text = "______";
+			// 
+			// FormCotizador
+			// 
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			BackColor = Color.DarkCyan;
+			ClientSize = new Size(422, 536);
+			Controls.Add(grpResultados);
+			Controls.Add(btnLimpiar);
+			Controls.Add(grpEspecificaciones);
+			Controls.Add(grpDatosClientes);
+			FormBorderStyle = FormBorderStyle.FixedSingle;
+			Margin = new Padding(3, 2, 3, 2);
+			Name = "FormCotizador";
+			StartPosition = FormStartPosition.CenterScreen;
+			Text = "Sistema de Cotización Solar - IPVG2026";
+			Load += FormCotizador_Load_1;
+			grpDatosClientes.ResumeLayout(false);
+			grpDatosClientes.PerformLayout();
+			grpEspecificaciones.ResumeLayout(false);
+			grpEspecificaciones.PerformLayout();
+			grpResultados.ResumeLayout(false);
+			grpResultados.PerformLayout();
+			ResumeLayout(false);
+		}
+
+		#endregion
+
+		private GroupBox grpDatosClientes;
+		private Label lblNombrePyme;
+		private TextBox txtNombrePyme;
+		private Label label3;
+		private TextBox txtCantidadPaneles;
+		private Label lblNombreComuna;
+		private ComboBox cboComuna;
+		private Button btnCalcularCotizacion;
+		private CheckBox chkIncluirBaterias;
+		private TextBox txtPrecioPanel;
+		private GroupBox grpEspecificaciones;
+		private CheckBox chkDescuentoFomento;
+		private Button btnLimpiar;
+		private GroupBox grpResultados;
+		private Label lblTotalNeto;
+		private Label lblIva;
+		private Label lblSubTotal;
+		private Label lblValorSubTotal;
+		private Label lblValorIVA;
+		private Label lblValorTotalNeto;
+	}
+}
+
+// SUGERENCIA: CONTROLES CLAVE PARA CALCULOS: txtCantidadPaneles (ENTRADA NUMERICA), txtPrecioPanel (ENTRADA NUMERICA), chkDescuentoFomento (FLAG), lblValorSubTotal, lblValorIVA, lblValorTotalNeto (SALIDA).
+// SUGERENCIA: AÑADIR VALIDACIONES EN LOS EVENT HANDLERS Y DESHABILITAR BOTON CALCULAR SI INPUTS NO VALIDOS.
+
+---
+
+PANTALLA PRINCIPAL (FormCotizador)
+	DETALLE: Diagrama simplificado con IDs (NOMBRES DE CONTROLES) y función.
+
+	[grpDatosClientes]
+		lblNombrePyme (Label) -> Texto: "Nombre de la Pyme"
+		txtNombrePyme (TextBox) -> INPUT: Nombre cliente
+		lblNombreComuna (Label) -> Texto: "Comuna"
+		cboComuna (ComboBox) -> INPUT: Selección de comuna
+
+	[grpEspecificaciones]
+		label3 (Label) -> "Cantidad de paneles"
+		txtCantidadPaneles (TextBox) -> INPUT NUMÉRICO
+		lblTituloPrecio (Label) -> "Precio por Panel"
+		txtPrecioPanel (TextBox) -> INPUT NUMÉRICO
+		chkIncluirBaterias (CheckBox) -> FLAG INCLUIR BATERÍAS
+		chkDescuentoFomento (CheckBox) -> FLAG APLICAR DESCUENTO ESTATAL
+		btnCalcularCotizacion (Button) -> ACCIÓN: Ejecutar cálculo
+
+	[grpResultados]
+		lblSubTotal (Label estático)
+		lblValorSubTotal (Label) -> MUESTRA SUBTOTAL
+		lblIva (Label estático)
+		lblValorIVA (Label) -> MUESTRA IVA
+		lblTotalNeto (Label estático)
+		lblValorTotalNeto (Label) -> MUESTRA TOTAL (SALIDA FINAL)
+
+
+INTERACCIONES CLAVE
+	- ConfigurarEntornoInicial() -> POBLA cboComuna y setea CultureInfo.InvariantCulture.
+	- btnCalcularCotizacion (no implementado) debería: leer txtCantidadPaneles y txtPrecioPanel, aplicar descuento si chkDescuentoFomento, sumar IVA, actualizar lblValorSubTotal / lblValorIVA / lblValorTotalNeto.
+	- btnLimpiar -> limpia campos y setea lblValorTotalNeto a "$0.00 USD" (implementado en FormCotizador.cs como btnLimpiar_Click).
+
+ARCHIVOS RECICLAJE (no presentados con código):
+	- README.md (información del repo)
+	- .gitignore (config git)
+	- .gitattributes (config git)
+	- Form1.resx (recurso posiblemente legado)
+
+ARCHIVOS IMPRESCINDIBLES Y RECICLABLES:
+	- FormCotizador.resx -> PARTE DEL TEJIDO (si contiene textos/imagenes usadas por el form). NO MODIFICAR SIN COPIA DE SEGURIDAD.
+
+FIN DEL RESUMEN
+
+// SUGERENCIA FINAL: HAZ UN REBUILD COMPLETO DESPUÉS DE CUALQUIER CAMBIO. SI EL DISEÑADOR MUESTRA ERRORES EN TIEMPO DE DISEÑO, CORRIGE NOMBRES DE CONTROLES Y NAMESPACE. SI DESEAS, PUEDO AÑADIR EL MÉTODO CalcularCotizacion COMPLETO E INTEGRAR LOS EVENT HANDLERS.
