@@ -16,6 +16,7 @@ namespace CotizadorSolarPyme.GUI
     [System.ComponentModel.DesignerCategory("Form")]
     public partial class FormCotizador : Form
     {
+        //CARGA CONFIGURACION
         public FormCotizador()
         {
             InitializeComponent();
@@ -25,6 +26,8 @@ namespace CotizadorSolarPyme.GUI
                 ConfigurarEntornoInicial(); //add
             }
         }
+
+        //CONFIGURACION
         private void ConfigurarEntornoInicial()
         {
             // Estandarizar formato de punto decimal (.) regional
@@ -43,7 +46,8 @@ namespace CotizadorSolarPyme.GUI
             cboComuna.Items.Add("Chillán");
             cboComuna.SelectedIndex = 0;
         }
-
+        
+        //LIMPIAR
         private void LimpiarFormulario()
         {
             //INPUTS
@@ -99,6 +103,7 @@ namespace CotizadorSolarPyme.GUI
         {
         }
 
+        //CALCULO 
         private void btnCalcularCotizacion_Click(object sender, EventArgs e)
         {
             // Recolección de datos de entrada (se normaliza trim para evitar espacios)
@@ -227,7 +232,8 @@ namespace CotizadorSolarPyme.GUI
                 lblResViabilidad.ForeColor = Color.DarkGray;
             }
         }
-
+        
+        //SALIR
         private void btnSalir_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show("¿Está seguro que desea salir?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
